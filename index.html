@@ -17,7 +17,53 @@
       <h1>Login</h1>
       <form id="loginForm">
         <input type="email" id="email" placeholder="Email" required />
-        <input type="password" id="password" placeholder="Password" required />
+
+        <!-- Password Field with Eye Toggle -->
+        <div class="password-container">
+          <input
+            type="password"
+            id="password"
+            placeholder="Password"
+            required
+          />
+          <span id="togglePassword">
+            <!-- Default: Open Eye -->
+            <svg
+              id="eyeOpen"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="#4caf50"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="eye-icon"
+            >
+              <path d="M1 10s4-6 9-6 9 6 9 6-4 6-9 6-9-6-9-6z"></path>
+              <circle cx="10" cy="10" r="3"></circle>
+            </svg>
+            <!-- Closed Eye Icon -->
+            <svg
+              id="eyeClosed"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="#4caf50"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="eye-icon"
+              style="display: none"
+            >
+              <path
+                d="M17.94 17.94L1 1m0 0L10 10m-9 0s4-6 9-6 9 6 9 6-4 6-9 6-9-6-9-6zm9 3a3 3 0 100-6 3 3 0 000 6z"
+              ></path>
+            </svg>
+          </span>
+        </div>
+
         <button type="submit">Login</button>
       </form>
       <div class="message" id="message"></div>

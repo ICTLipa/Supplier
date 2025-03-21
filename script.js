@@ -13,6 +13,23 @@ const accounts = [
   const message = document.getElementById("message");
   const emailInput = document.getElementById("email");
   const passwordInput = document.getElementById("password");
+  const togglePassword = document.getElementById("togglePassword");
+  const eyeOpen = document.getElementById("eyeOpen");
+  const eyeClosed = document.getElementById("eyeClosed");
+  
+  togglePassword.addEventListener("click", function () {
+    const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+    passwordInput.setAttribute("type", type);
+  
+    // Toggle icons
+    if (type === "text") {
+      eyeOpen.style.display = "none";
+      eyeClosed.style.display = "block";
+    } else {
+      eyeOpen.style.display = "block";
+      eyeClosed.style.display = "none";
+    }
+  });
 
   // Auto-redirect if already logged in
   if (sessionStorage.getItem("loggedIn")) {
