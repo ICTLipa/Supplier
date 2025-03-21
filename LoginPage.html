@@ -3,57 +3,92 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Simple Login Page</title>
+    <title>Login Page</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
       body {
         display: flex;
         justify-content: center;
         align-items: center;
         height: 100vh;
-        margin: 0;
-        background-color: #f0f2f5;
-        font-family: Arial, sans-serif;
+        background-image: url("bsu_img.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-color: rgba(
+          0,
+          0,
+          0,
+          0.4
+        ); /* Add semi-transparent dark color */
+        background-blend-mode: darken; /* Blend dark color over the image */
+        font-family: "Poppins", sans-serif;
       }
+
       .login-container {
-        background-color: white;
+        background-color: #fff;
         padding: 2rem;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        width: 300px;
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        width: 400px;
         text-align: center;
       }
-      .login-container h2 {
+      .login-container h1 {
         margin-bottom: 1.5rem;
+        color: #0b0a0a;
       }
       .login-container input {
         width: 100%;
-        padding: 0.5rem;
+        padding: 0.75rem;
         margin: 0.5rem 0;
-        border: 1px solid #ccc;
-        border-radius: 5px;
+        border: 1.5px solid #beb8b8;
+        border-radius: 4px;
+        font-size: 14px;
+        outline: none;
+        transition: 0.3s;
+      }
+      .login-container input:focus {
+        border-color: #4caf50;
       }
       .login-container button {
         width: 100%;
-        padding: 0.5rem;
+        padding: 0.75rem;
         margin-top: 1rem;
         background-color: #4caf50;
         color: white;
         border: none;
-        border-radius: 5px;
+        border-radius: 8px;
         cursor: pointer;
+        font-weight: 600;
+        font-size: 15px;
+        transition: 0.3s;
       }
       .login-container button:hover {
         background-color: #45a049;
       }
       .message {
         margin-top: 1rem;
+        font-size: 14px;
         color: red;
+      }
+      #message {
+        font-size: 12px;
       }
     </style>
   </head>
+
   <body>
     <div class="login-container">
-      <h2>Login</h2>
+      <h1>Login</h1>
       <form id="loginForm">
         <input type="email" id="email" placeholder="Email" required />
         <input type="password" id="password" placeholder="Password" required />
@@ -63,34 +98,90 @@
     </div>
 
     <script>
-      const defaultEmail = "user@gmail.com";
-      const defaultPassword = "password123";
+      const accounts = [
+        { email: "internalaudit@gmail.com", password: "InternalAudit_29" },
+        { email: "accounting@gmail.com", password: "Accounting_30" },
+        { email: "pso@gmail.com", password: "PropertyandSupply_31" },
+        { email: "procurement@gmail.com", password: "Procurement_32" },
+        { email: "vcaf@gmail.com", password: "ViceChanAdminFinace_33" },
+      ];
+
+      const redirectURL =
+        "https://drive.google.com/drive/folders/19wRPRgyvfPMjE-hLxNe-ezAVzOnlA8_x?usp=sharing";
 
       const form = document.getElementById("loginForm");
       const message = document.getElementById("message");
+      const emailInput = document.getElementById("email");
+      const passwordInput = document.getElementById("password");
+
+      // Auto-redirect if already logged in
+      if (sessionStorage.getItem("loggedIn")) {
+        window.location.href = redirectURL;
+      }
+
+      // Email validation regex
+      function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
+
+      // Password validation regex
+      function validatePassword(password) {
+        const re = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+        return re.test(password);
+      }
 
       form.addEventListener("submit", function (event) {
-        event.preventDefault(); // Prevent default form submission
+        event.preventDefault();
 
-        const enteredEmail = document.getElementById("email").value;
-        const enteredPassword = document.getElementById("password").value;
+        const enteredEmail = emailInput.value.trim();
+        const enteredPassword = passwordInput.value.trim();
 
-        if (
-          enteredEmail === defaultEmail &&
-          enteredPassword === defaultPassword
-        ) {
-          message.style.color = "green";
-          message.textContent = "Login Successful! Redirecting...";
-          // Redirect after 1 second
+        // Check if fields are empty
+        if (!enteredEmail || !enteredPassword) {
+          showMessage("Please fill in all fields!", "red");
+          return;
+        }
+
+        // Validate email format
+        if (!validateEmail(enteredEmail)) {
+          showMessage("Invalid email format!", "red");
+          return;
+        }
+
+        // Check if account exists
+        const accountFound = accounts.find(
+          (acc) =>
+            acc.email.toLowerCase() === enteredEmail.toLowerCase() &&
+            acc.password === enteredPassword
+        );
+
+        if (accountFound) {
+          // Successful login
+          showMessage("Login Successful! Redirecting...", "green");
+          sessionStorage.setItem("loggedIn", "true");
+
           setTimeout(() => {
-            window.location.href =
-              "https://drive.google.com/drive/folders/1VnmpWXaDCTpboZ3tJT0126JUmghGTGH2?usp=sharing"; // Replace with your specific Google Drive link
+            window.location.href = redirectURL;
           }, 1000);
         } else {
-          message.style.color = "red";
-          message.textContent = "Invalid email or password!";
+          // Invalid credentials
+          showMessage("Invalid email or password!", "red");
         }
       });
+
+      // Message display function
+      function showMessage(msg, color) {
+        message.style.color = color;
+        message.style.fontSize = "12px"; // Make message smaller
+        message.textContent = msg;
+      }
+
+      // Function to display message
+      function showMessage(msg, color) {
+        message.style.color = color;
+        message.textContent = msg;
+      }
     </script>
   </body>
 </html>
